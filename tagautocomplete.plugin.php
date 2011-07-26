@@ -8,7 +8,6 @@ class TagAutoComplete extends Plugin
 	public function action_admin_header($theme)
 	{
 		if( $theme->page == 'publish' ) {
-//			Stack::add( 'admin_header_javascript', Site::get_url( 'vendor' ) . "/multicomplete.js", 'multicomplete', 'jquery.ui' );
 			Stack::add( 'admin_header_javascript', $this->get_url() . "/multicomplete.js", 'multicomplete', 'jquery.ui' );
 			$url = URL::get( 'ajax', array( 'context' => 'auto_tags' ) );
 			$url = '"' . $url . '"';
@@ -20,6 +19,7 @@ $(document).ready(function(){
 });
 HEADER_JS;
 			Stack::add( 'admin_header_javascript',  $script, 'tags_auto', array('jquery', 'multicomplete') );
+			Stack::add( 'admin_stylesheet', array( $this->get_url() . "/jquery.ui.autocomplete.css", 'screen' ), 'autocomplete', array( 'jqueryui' ) );
 		}
 	}
 
