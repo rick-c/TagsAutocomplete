@@ -19,7 +19,6 @@ $(document).ready(function(){
 });
 HEADER_JS;
 			Stack::add( 'admin_header_javascript',  $script, 'tags_auto', array('jquery', 'multicomplete') );
-//			Stack::add( 'admin_stylesheet', array( $this->get_url() . "/jquery.ui.autocomplete.css", 'screen' ), 'autocomplete', array( 'jqueryui' ) );
 		}
 	}
 
