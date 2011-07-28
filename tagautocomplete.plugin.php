@@ -8,18 +8,18 @@ class TagAutoComplete extends Plugin
 	public function action_admin_header($theme)
 	{
 		if( $theme->page == 'publish' ) {
-			Stack::add( 'admin_header_javascript', $this->get_url() . "/multicomplete.js", 'multicomplete', 'jquery.ui' );
+			Stack::add( 'admin_header_javascript', $this->get_url() . "/multicomplete.js", 'multicomplete', array( 'jquery.ui' ) );
 			$url = URL::get( 'ajax', array( 'context' => 'auto_tags' ) );
 			$url = '"' . $url . '"';
 			$script = <<< HEADER_JS
 $(document).ready(function(){
 	$("#tags").multicomplete({source: $url,
-		minLength: 0
+		minLength: 1
 	});
 });
 HEADER_JS;
 			Stack::add( 'admin_header_javascript',  $script, 'tags_auto', array('jquery', 'multicomplete') );
-			Stack::add( 'admin_stylesheet', array( $this->get_url() . "/jquery.ui.autocomplete.css", 'screen' ), 'autocomplete', array( 'jqueryui' ) );
+//			Stack::add( 'admin_stylesheet', array( $this->get_url() . "/jquery.ui.autocomplete.css", 'screen' ), 'autocomplete', array( 'jqueryui' ) );
 		}
 	}
 
@@ -29,14 +29,11 @@ HEADER_JS;
 	 */
 	public function action_ajax_auto_tags( $handler )
 	{
-		// Get the data that was sent
-//		$response = $handler->handler_vars[ 'q' ];
-		// Wipe anything else that's in the buffer
 		$selected = array();
 		if( isset( $handler->handler_vars['selected'] ) ) {
 			$selected = $handler->handler_vars['selected'];
 		}
-		if( isset($handler->handler_vars['term'] ) ) {
+		if( isset( $handler->handler_vars['term'] ) && MultiByte::strlen( $handler->handler_vars['term'] ) ) {
 			$tags = Tags::vocabulary()->get_search( $handler->handler_vars['term'], 'term_display ASC' );
 		}
 		else {
@@ -45,11 +42,6 @@ HEADER_JS;
 
 		$resp = array();
 		foreach ( $tags as $tag ) {
-
-//			$final_response[] = array(
-//				'id' => $tag->id,
-//				'name' => $tag->term_display,
-//			);
 			$resp[] = $tag->term_display;
 		}
 		$resp = array_diff($resp, $selected );
