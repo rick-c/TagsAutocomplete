@@ -8,7 +8,7 @@ class TagAutoComplete extends Plugin
 	public function action_admin_header($theme)
 	{
 		if( $theme->page == 'publish' ) {
-			Stack::add( 'admin_header_javascript', $this->get_url() . "/multicomplete.js", 'multicomplete', array( 'jquery.ui' ) );
+			Stack::add( 'admin_header_javascript', $this->get_url() . "/multicomplete.min.js", 'multicomplete', array( 'jquery.ui' ) );
 			$url = URL::get( 'ajax', array( 'context' => 'auto_tags' ) );
 			$url = '"' . $url . '"';
 			$script = <<< HEADER_JS
