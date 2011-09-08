@@ -8,9 +8,8 @@ class TagAutoComplete extends Plugin
 	public function action_admin_header($theme)
 	{
 		if( $theme->page == 'publish' ) {
-			Stack::add( 'admin_header_javascript', $this->get_url() . "/multicomplete.min.js", 'multicomplete', array( 'jquery.ui' ) );
-			$url = URL::get( 'ajax', array( 'context' => 'auto_tags' ) );
-			$url = '"' . $url . '"';
+			Stack::add( 'admin_header_javascript', Site::get_url( 'vendor' ) . "/multicomplete.js", 'multicomplete', array( 'jquery.ui' ) );
+			$url = '"' . URL::get( 'ajax', array( 'context' => 'auto_tags' ) ) . '"';
 			$script = <<< HEADER_JS
 $(document).ready(function(){
 	$("#tags").multicomplete({source: $url,
@@ -41,7 +40,10 @@ HEADER_JS;
 
 		$resp = array();
 		foreach ( $tags as $tag ) {
-			$resp[] = $tag->term_display;
+			$resp[] = array(
+			    'label' => $tag->term_display,
+			    'value' => MultiByte::strpos( $tag->term_display, ',' ) === false ? $tag->term_display : $tag->tag_text_searchable
+			);
 		}
 		$resp = array_diff($resp, $selected );
 		// Send the response
