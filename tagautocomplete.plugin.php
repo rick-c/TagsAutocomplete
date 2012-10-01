@@ -17,7 +17,7 @@ $(document).ready(function(){
 	});
 });
 HEADER_JS;
-			Stack::add( 'admin_header_javascript',  $script, 'tags_auto', array('jquery', 'multicomplete') );
+			Stack::add( 'admin_header_javascript',  $script, 'tags_auto', array( 'multicomplete' ) );
 		}
 	}
 
@@ -35,7 +35,7 @@ HEADER_JS;
 			$tags = Tags::vocabulary()->get_search( $handler->handler_vars['term'], 'term_display ASC' );
 		}
 		else {
-			$tags = Tags::vocabulary()->get_tree();
+			$tags = Tags::vocabulary()->get_tree( 'term_display ASC' );
 		}
 
 		$resp = array();
