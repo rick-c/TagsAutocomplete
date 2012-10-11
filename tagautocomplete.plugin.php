@@ -13,7 +13,8 @@ class TagAutoComplete extends Plugin
 			$script = <<< HEADER_JS
 $(document).ready(function(){
 	$("#tags").multicomplete({source: $url,
-		minLength: 1
+		minLength: 1,
+		autoFocus: true,
 	});
 });
 HEADER_JS;
@@ -32,7 +33,8 @@ HEADER_JS;
 			$selected = $handler->handler_vars['selected'];
 		}
 		if( isset( $handler->handler_vars['term'] ) && MultiByte::strlen( $handler->handler_vars['term'] ) ) {
-			$tags = Tags::vocabulary()->get_search( $handler->handler_vars['term'], 'term_display ASC' );
+			$search = $handler->handler_vars['term'] . '%';
+			$tags = new Terms( DB::get_results( "SELECT * FROM {terms} WHERE vocabulary_id = :vid and LOWER(term_display) LIKE LOWER(:crit) ORDER BY term_display ASC", array( 'vid' => Tags::vocabulary()->id, 'crit' => $search ), 'Term' ) );
 		}
 		else {
 			$tags = Tags::vocabulary()->get_tree( 'term_display ASC' );
