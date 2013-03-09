@@ -1,16 +1,15 @@
 <?php
 class TagAutoComplete extends Plugin
 {
+
 	/**
-	 * Add the required javascript to the publish page
-	 * @param Theme $theme The admin theme instance
-	 **/
-	public function action_admin_header($theme)
+	 *  Register our javascript with Habari
+	 */
+	public function action_register_stackitems()
 	{
-		if( $theme->page == 'publish' ) {
-			Stack::add( 'admin_header_javascript', Site::get_url( 'vendor' ) . "/multicomplete.js", 'multicomplete', array( 'jquery.ui' ) );
-			$url = '"' . URL::get( 'ajax', array( 'context' => 'auto_tags' ) ) . '"';
-			$script = <<< HEADER_JS
+		StackItem::register( 'multicomplete', Site::get_url( 'vendor' ) . '/multicomplete.js' )->add_dependency( 'jquery.ui' );
+		$url = '"' . URL::get( 'ajax', array( 'context' => 'auto_tags' ) ) . '"';
+		$script = <<< HEADER_JS
 $(document).ready(function(){
 	$("#tags").multicomplete({source: $url,
 		minLength: 1,
@@ -18,7 +17,18 @@ $(document).ready(function(){
 	});
 });
 HEADER_JS;
-			Stack::add( 'admin_header_javascript',  $script, 'tags_auto', array( 'multicomplete' ) );
+		StackItem::register( 'tags_auto', $script )->add_dependency( 'multicomplete' );
+	}
+
+	/**
+	 * Actually add the required javascript to the publish page
+	 * @param Theme $theme The admin theme instance
+	 **/
+	public function action_admin_header($theme)
+	{
+		if( $theme->page == 'publish' ) {
+			Stack::add( 'admin_header_javascript', 'multicomplete' );
+			Stack::add( 'admin_header_javascript', 'tags_auto' );
 		}
 	}
 
@@ -42,12 +52,11 @@ HEADER_JS;
 
 		$resp = array();
 		foreach ( $tags as $tag ) {
-			$resp[] = array(
-			    'label' => $tag->term_display,
-			    'value' => MultiByte::strpos( $tag->term_display, ',' ) === false ? $tag->term_display : $tag->tag_text_searchable
-			);
+			$resp[] = MultiByte::strpos( $tag->term_display, ',' ) === false ? $tag->term_display : $tag->tag_text_searchable;
 		}
-		$resp = array_diff($resp, $selected );
+		if( count( $selected ) ) {
+			$resp = array_diff($resp, $selected );
+		}
 		// Send the response
 		echo json_encode( $resp );
 	}
