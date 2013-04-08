@@ -1,4 +1,6 @@
 <?php
+namespace habari;
+
 class TagAutoComplete extends Plugin
 {
 
@@ -58,7 +60,20 @@ HEADER_JS;
 			$resp = array_diff($resp, $selected );
 		}
 		// Send the response
-		echo json_encode( $resp );
+		$ar = new AjaxResponse();
+		$ar->data = $resp;
+		$ar->out();
+//		echo json_encode( $resp );
+	}
+
+	public function action_form_publish( $form, $post, $context )
+	{
+		$old = $form->get_control( 'tags' );
+		$tags = $old->value;
+		$new = FormControlText::create('tags', null, array( 'style' => 'width:90%;', 'class' => 'check-change', 'id' => 'tags', 'tabindex' => $old->properties['tabindex'] ) );
+		$new->set_value( $tags );
+		$old->container->append( $new );
+		$old->container->replace( $old, $new );
 	}
 
 }

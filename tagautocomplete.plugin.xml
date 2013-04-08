@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <pluggable type="plugin">
 	<name>Tag Autocomplete</name>
-	<author url="http://habariproject.org">Habari Community</author>
-	<version>0.2</version>
+	<author url="http//sagrising.cockrumpublishing.com">Richard Cockrum</author>
+	<version>0.3</version>
 	<guid>EA93EF24-8E54-4BF7-84BD-4C681AE359C1</guid>
 	<url>http://habariproject.org/</url>
 	<description><![CDATA[Adds autocomplete functionality to the tags input on the publish page.]]></description>
