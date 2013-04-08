@@ -60,10 +60,10 @@ HEADER_JS;
 			$resp = array_diff($resp, $selected );
 		}
 		// Send the response
-		$ar = new AjaxResponse();
-		$ar->data = $resp;
-		$ar->out();
-//		echo json_encode( $resp );
+//		$ar = new AjaxResponse();
+//		$ar->data = $resp;
+//		$ar->out();
+		echo json_encode( $resp );
 	}
 
 	public function action_form_publish( $form, $post, $context )
