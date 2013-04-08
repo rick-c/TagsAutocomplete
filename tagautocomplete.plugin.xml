@@ -3,6 +3,7 @@
 	<name>Tag Autocomplete</name>
 	<author url="http://habariproject.org">Habari Community</author>
 	<version>0.2</version>
+	<guid>EA93EF24-8E54-4BF7-84BD-4C681AE359C1</guid>
 	<url>http://habariproject.org/</url>
 	<description><![CDATA[Adds autocomplete functionality to the tags input on the publish page.]]></description>
 	<license url="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License 2.0</license>
