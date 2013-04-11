@@ -1,5 +1,5 @@
 <?php
-namespace habari;
+namespace Habari;
 
 class TagAutoComplete extends Plugin
 {
@@ -13,8 +13,9 @@ class TagAutoComplete extends Plugin
 		$url = '"' . URL::get( 'ajax', array( 'context' => 'auto_tags' ) ) . '"';
 		$script = <<< HEADER_JS
 $(document).ready(function(){
-	$("#tags").multicomplete({source: $url,
-		minLength: 1,
+	$("#tags").multicomplete({
+		source: $url,
+		minLength: 2,
 		autoFocus: true,
 	});
 });
@@ -42,6 +43,7 @@ HEADER_JS;
 	{
 		$selected = array();
 		if( isset( $handler->handler_vars['selected'] ) ) {
+//			$selected = Utils::single_array( $handler->handler_vars['selected'] );
 			$selected = $handler->handler_vars['selected'];
 		}
 		if( isset( $handler->handler_vars['term'] ) && MultiByte::strlen( $handler->handler_vars['term'] ) ) {
@@ -54,16 +56,21 @@ HEADER_JS;
 
 		$resp = array();
 		foreach ( $tags as $tag ) {
-			$resp[] = MultiByte::strpos( $tag->term_display, ',' ) === false ? $tag->term_display : $tag->tag_text_searchable;
+//			$resp[] = MultiByte::strpos( $tag->term_display, ',' ) === false ? $tag->term_display : $tag->tag_text_searchable;
+			$resp[] = array(
+				'label' => $tag->term_display,
+				'value' => ( MultiByte::strpos( $tag->term_display, ',' ) === false ? $tag->term_display : $tag->tag_text_searchable ),
+			);
 		}
-		if( count( $selected ) ) {
-			$resp = array_diff($resp, $selected );
-		}
+
+//		if( count( $selected ) ) {
+//			$resp = array_diff($resp, $selected );
+//		}
 		// Send the response
-//		$ar = new AjaxResponse();
-//		$ar->data = $resp;
-//		$ar->out();
-		echo json_encode( $resp );
+		$ar = new AjaxResponse();
+		$ar->data = $resp;
+		$ar->out();
+//		echo json_encode( $resp );
 	}
 
 	public function action_form_publish( $form, $post, $context )
